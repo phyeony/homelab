@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflared
+  namespace: cloudflare
+  labels:
+    app: cloudflared
+spec:
+  replicas: 1
+  # 1. The Deployment's "Radar"
+  selector:
+    matchLabels:
+      app: cloudflared
+
+  # 2. The Pod's Blueprint
+  template:
+    metadata:
+      labels:
+        app: cloudflared
+    spec:
+      # Ensures the tunnel runs strictly on your Intel N100 main node
+      nodeSelector:
+        kubernetes.io/hostname: main
+      containers:
+        - name: cloudflared
+          image: cloudflare/cloudflared:latest
+          args:
+            - tunnel
+            - --no-autoupdate
+            - run
+          # env:
+          #   - name: TUNNEL_TOKEN
+          #     valueFrom:
+          #       secretKeyRef:
+          #         name: cloudflare-tunnel-token
+          #         key: token
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            request:
+              cpu: 20m
+              memory: 64Mi
