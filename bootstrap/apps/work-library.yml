@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: work-library
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:phyeony/homelab.git
+    targetRevision: main
+    path: apps/work-library
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: work-library
+  syncPolicy:
+    # Auto-sync so a new image tag committed by CI rolls out on its own.
+    automated:
+      prune: true
+      selfHeal: true
