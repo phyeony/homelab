@@ -12,4 +12,4 @@ images:
   - name: work-library
     newName: ghcr.io/phyeony/work-library
     # Updated automatically by the work-library repo's release workflow.
-    newTag: latest
+    newTag: "4bc8cbebdbe6d4a70d3c1f84677a53e3ab6c72f3"
