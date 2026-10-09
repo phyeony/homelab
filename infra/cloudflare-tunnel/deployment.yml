@@ -28,12 +28,12 @@ spec:
             - tunnel
             - --no-autoupdate
             - run
-          # env:
-          #   - name: TUNNEL_TOKEN
-          #     valueFrom:
-          #       secretKeyRef:
-          #         name: cloudflare-tunnel-token
-          #         key: token
+          env:
+            - name: TUNNEL_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflare-tunnel-token
+                  key: token
           resources:
             limits:
               cpu: 100m
