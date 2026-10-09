@@ -9,7 +9,7 @@ spec:
     # Use SSH URL here:
     repoURL: git@github.com:phyeony/homelab.git
     targetRevision: main
-    path: infrastructure/cloudflare-tunnel
+    path: infra/cloudflare-tunnel
   destination:
     server: https://kubernetes.default.svc
     namespace: cloudflare
