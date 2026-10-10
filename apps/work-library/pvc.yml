@@ -1,15 +1,4 @@
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: work-library-data
-spec:
-  accessModes: [ReadWriteOnce]
-  storageClassName: local-path
-  resources:
-    requests:
-      storage: 1Gi
----
-# Replicated across nodes by Longhorn; replaces work-library-data (local-path, pinned to one node).
+# Replicated across nodes by Longhorn, so the pod can fail over to another node with its data.
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
