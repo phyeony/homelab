@@ -8,3 +8,15 @@ spec:
   resources:
     requests:
       storage: 1Gi
+---
+# Replicated across nodes by Longhorn; replaces work-library-data (local-path, pinned to one node).
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: work-library-data-longhorn
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 1Gi

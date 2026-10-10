@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: work-library
 spec:
-  replicas: 1 # SQLite: a single writer
+  replicas: 0 # Scaled down while migrating data to Longhorn; back to 1 (SQLite: a single writer) after
   strategy:
     type: Recreate
   selector:
