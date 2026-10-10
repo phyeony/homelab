@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: longhorn
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://charts.longhorn.io
+    chart: longhorn
+    targetRevision: 1.12.1
+    helm:
+      valuesObject:
+        # Its pre-upgrade Helm hook job blocks Argo CD syncs (per Longhorn's Argo CD install docs).
+        preUpgradeChecker:
+          jobEnabled: false
+        persistence:
+          # Keep k3s local-path as the default; PVCs opt in with storageClassName: longhorn.
+          defaultClass: false
+          # One copy on each node (main + worker-liva).
+          defaultClassReplicaCount: 2
+          # Prefer reading from a replica on the pod's own node.
+          defaultDataLocality: best-effort
+        defaultSettings:
+          defaultReplicaCount: '{"v1":"2","v2":"2"}'
+          # Force-delete pods stuck on a dead node so the volume can reattach elsewhere.
+          nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: longhorn-system
+  syncPolicy:
+    automated:
+      # Never let Argo CD auto-delete storage components.
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
