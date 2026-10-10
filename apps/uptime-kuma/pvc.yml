@@ -1,0 +1,11 @@
+# Replicated across nodes by Longhorn, so the pod can fail over to another node with its data.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: uptime-kuma-data
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 1Gi
