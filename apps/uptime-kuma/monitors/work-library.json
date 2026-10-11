@@ -1,0 +1,5 @@
+{
+  "type": "http",
+  "name": "work-library",
+  "url": "http://work-library.work-library.svc/healthz"
+}

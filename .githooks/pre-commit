@@ -1,0 +1,25 @@
+#!/bin/sh
+# Enable with: git config core.hooksPath .githooks
+#
+# AutoKuma skips an unparsable monitor file and treats that monitor as removed,
+# so block commits that would ship broken JSON, or files kustomize won't mount.
+set -e
+
+dir=apps/uptime-kuma/monitors
+status=0
+
+for f in $(git diff --cached --name-only --diff-filter=ACMR -- "$dir/*.json"); do
+  if ! git show ":$f" | jq empty 2>/dev/null; then
+    echo "pre-commit: invalid JSON in $f" >&2
+    status=1
+  fi
+done
+
+for f in $(git ls-files --cached -- "$dir/*.json"); do
+  if ! git show ":apps/uptime-kuma/kustomization.yml" | grep -q -- "- ${f#apps/uptime-kuma/}\$"; then
+    echo "pre-commit: $f is not listed in apps/uptime-kuma/kustomization.yml" >&2
+    status=1
+  fi
+done
+
+exit $status

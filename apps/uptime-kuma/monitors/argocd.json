@@ -1,0 +1,5 @@
+{
+  "type": "http",
+  "name": "Argo CD",
+  "url": "http://argocd-server.argocd.svc/"
+}

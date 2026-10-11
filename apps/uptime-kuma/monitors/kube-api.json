@@ -1,0 +1,7 @@
+{
+  "type": "http",
+  "name": "Kubernetes API",
+  "url": "https://kubernetes.default.svc/readyz",
+  "ignore_tls": true,
+  "accepted_statuscodes": ["200-299", "401"]
+}

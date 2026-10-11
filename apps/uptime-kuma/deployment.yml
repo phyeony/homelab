@@ -51,7 +51,46 @@ spec:
               memory: 128Mi
             limits:
               memory: 512Mi
+        # Syncs the JSON files in monitors/ into Uptime Kuma through its API.
+        - name: autokuma
+          image: autokuma
+          env:
+            # No credentials: Kuma's own auth is disabled in its settings (Settings → Security),
+            # and Cloudflare Access guards the tunnel hostname instead.
+            - name: AUTOKUMA__KUMA__URL
+              value: http://localhost:3001
+            - name: AUTOKUMA__STATIC_MONITORS
+              value: /monitors
+            # ConfigMap volumes expose each key as a symlink; AutoKuma skips symlinks by default.
+            - name: AUTOKUMA__FILES__FOLLOW_SYMLINKS
+              value: "true"
+            - name: AUTOKUMA__DATA_PATH
+              value: /data
+            - name: AUTOKUMA__DOCKER__ENABLED
+              value: "false"
+            # The ConfigMap takes about a minute to reach the mounted files anyway.
+            - name: AUTOKUMA__SYNC_INTERVAL
+              value: "60"
+            # A file that fails to parse looks deleted; keep its monitor (and history) instead.
+            - name: AUTOKUMA__ON_DELETE
+              value: keep
+          volumeMounts:
+            - name: data
+              mountPath: /data
+              subPath: autokuma # its ID map lives next to kuma.db; without it, restarts duplicate monitors
+            - name: monitors
+              mountPath: /monitors
+              readOnly: true
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: uptime-kuma-data
+        - name: monitors
+          configMap:
+            name: autokuma-monitors

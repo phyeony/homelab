@@ -6,7 +6,25 @@ resources:
   - pvc.yml
   - deployment.yml
   - service.yml
+configMapGenerator:
+  # AutoKuma monitor definitions; each file name is the monitor's AutoKuma ID.
+  - name: autokuma-monitors
+    files:
+      - monitors/argocd.json
+      - monitors/coredns.json
+      - monitors/kube-api.json
+      - monitors/longhorn.json
+      - monitors/node-main.json
+      - monitors/node-worker-liva.json
+      - monitors/traefik.json
+      - monitors/work-library.json
+    options:
+      # Keep a stable name so edits update the mounted files in place instead of restarting the pod.
+      disableNameSuffixHash: true
 images:
   - name: uptime-kuma
     newName: louislam/uptime-kuma
     newTag: "2.5.5"
+  - name: autokuma
+    newName: ghcr.io/bigboot/autokuma
+    newTag: "2.0.0"

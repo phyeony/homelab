@@ -1,0 +1,5 @@
+{
+  "type": "http",
+  "name": "Longhorn UI",
+  "url": "http://longhorn-frontend.longhorn-system.svc/"
+}
